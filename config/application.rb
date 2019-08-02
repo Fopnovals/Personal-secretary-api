@@ -11,6 +11,7 @@ module PersonalSecretaryApi
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
     config.api_only = true
+    config.middleware.use ActionDispatch::Cookies
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins 'localhost:3000', '127.0.0.1:3000', 'http://192.168.12.71:8100',
