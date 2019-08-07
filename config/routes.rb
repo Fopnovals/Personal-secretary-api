@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
-  get 'sessions/new'
   resources :users
-  get    'login'   => 'sessions#new'
-  post   'login'   => 'sessions#create'
-  delete 'logout'  => 'sessions#destroy'
+  # get '/profile', to: 'users#profile'
+  post '/login', to: 'authentication#login'
+  get '/*a', to: 'application#not_found'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
