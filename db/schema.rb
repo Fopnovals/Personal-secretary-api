@@ -10,10 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_05_211544) do
+ActiveRecord::Schema.define(version: 2019_08_19_111405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "professions", force: :cascade do |t|
+    t.string "name"
+    t.index ["name"], name: "index_professions_on_name", unique: true
+  end
+
+  create_table "services", force: :cascade do |t|
+    t.string "name"
+    t.bigint "profession_id"
+    t.index ["profession_id"], name: "index_services_on_profession_id"
+  end
+
+  create_table "specializations", force: :cascade do |t|
+    t.string "name"
+    t.bigint "profession_id"
+    t.index ["name"], name: "index_specializations_on_name", unique: true
+    t.index ["profession_id"], name: "index_specializations_on_profession_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"

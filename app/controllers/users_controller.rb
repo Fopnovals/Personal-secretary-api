@@ -2,7 +2,7 @@ require 'json_web_token'
 
 class UsersController < ApplicationController
   before_action :authorize_request, except: :create
-  before_action :find_user, except: %i[create index show if params[:id] == 'me' ]
+  before_action :find_user, except: %i[create index ]
 
   # GET /users
   def index
@@ -12,15 +12,7 @@ class UsersController < ApplicationController
 
   # GET /users/{username}
   def show
-    if params[:id] == 'me'
-      header = request.headers['Authorization']
-      header = header.split(' ').last if header
-      decoded = JsonWebToken.decode(header)
-      logger.debug(decoded[:user_id])
-      @user = User.find(decoded[:user_id])
-      render json: @user, status: :ok
-    else render json: {first_name: @user.first_name, last_name: @user.last_name, role: @user.role, image: @user.photo_url}, status: :ok
-    end
+    render json: {first_name: @user.first_name, last_name: @user.last_name, role: @user.role, image: @user.photo_url}, status: :ok
   end
 
   # POST /users
@@ -51,9 +43,19 @@ class UsersController < ApplicationController
   private
 
   def find_user
-    @user = User.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render json: { errors: 'User not found' }, status: :not_found
+    if params[:id] == 'me'
+      header = request.headers['Authorization']
+      header = header.split(' ').last if header
+      decoded = JsonWebToken.decode(header)
+      @user = User.find(decoded[:user_id])
+      render json: @user, status: :ok
+    else
+      begin
+        @user = User.find(params[:id])
+        rescue ActiveRecord::RecordNotFound
+        render json: { errors: 'User not found' }, status: :not_found
+      end
+    end
   end
 
   def user_params
