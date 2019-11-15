@@ -5,7 +5,7 @@ ruby '2.6.3'
 
 gem 'jwt'
 gem 'bcrypt', '~> 3.1.7'
-gem 'rack-cors', '~> 0.3.1'
+gem 'rack-cors', '~> 1.0.5'
 gem 'pg', '>= 0.18', '< 2.0'
 
 
